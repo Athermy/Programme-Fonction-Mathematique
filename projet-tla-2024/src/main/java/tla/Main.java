@@ -52,7 +52,6 @@ public class Main {
         JSlider slider = new JSlider(JSlider.HORIZONTAL, 1, 100, (int)(plot.range * RANGE_ADJUST));
         slider.setPaintLabels(true);
         topPanel.add(slider);
-        slider.setInverted(true);
 
         frame.add(topPanel, BorderLayout.NORTH);
 
