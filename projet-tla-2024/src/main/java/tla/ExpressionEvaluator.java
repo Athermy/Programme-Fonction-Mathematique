@@ -6,7 +6,7 @@ CASTEL Arthur
 
 package tla;
 
-import java.util.*;
+import java.util.Stack;
 
 public class ExpressionEvaluator {
 
@@ -23,11 +23,22 @@ public class ExpressionEvaluator {
 
     public double evaluate(double x) throws Exception {
         stack.clear();
+        boolean inAbsoluteValue = false;
         for (String token : postfixExpression.split(" ")) {
             if (isNumeric(token)) {
                 stack.push(Double.parseDouble(token));
             } else if ("x".equals(token)) {
                 stack.push(x);
+            } else if ("|".equals(token)) {
+                if (inAbsoluteValue) {
+                    // Appliquer la valeur absolue dès que l'on trouve le symbole de fin |
+                    double value = stack.pop();
+                    stack.push(Math.abs(value)); // Appliquer la valeur absolue
+                    inAbsoluteValue = false; // Réinitialiser l'indicateur
+                } else {
+                    // Début d'une expression avec valeur absolue
+                    inAbsoluteValue = true;
+                }
             } else {
                 double b = stack.pop();
                 double a = stack.pop();
@@ -39,9 +50,18 @@ public class ExpressionEvaluator {
                     case "^": stack.push(Math.pow(a, b)); break;
                     default: throw new Exception("Unknown operator: " + token);
                 }
+                
             }
+            
         }
-        return stack.pop();
+        if (postfixExpression.startsWith("|") && postfixExpression.endsWith("|")) {
+            return Math.abs(stack.pop());
+        
+        } else {
+            return stack.pop();
+        }
+        
+        
     }
 
     private String infixToPostfix(String expression) throws Exception {
@@ -52,7 +72,7 @@ public class ExpressionEvaluator {
                 result.append(c);
             } else if (c == 'x') {
                 result.append('x');
-            } else if ("+-*/^".indexOf(c) >= 0) {
+            } else if ("+-*/^|".indexOf(c) >= 0) {
                 result.append(' ');
                 while (!stack.isEmpty() && precedence(c) <= precedence(stack.peek())) {
                     result.append(stack.pop()).append(' ');
@@ -69,7 +89,7 @@ public class ExpressionEvaluator {
                 }
                 stack.pop();
             } else {
-                throw new Exception("Invalid character: " + c + "attentue");
+                throw new Exception("Invalid character: " + c);
             }
         }
         while (!stack.isEmpty()) {
@@ -83,6 +103,7 @@ public class ExpressionEvaluator {
             case '+': case '-': return 1;
             case '*': case '/': return 2;
             case '^': return 3;
+            case '|': return 4;
             default: return -1;
         }
     }
