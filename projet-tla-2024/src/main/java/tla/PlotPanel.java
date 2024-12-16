@@ -9,10 +9,6 @@ package tla;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Classe PlotPanel : zone de tracé du graphique basée sur un JPanel
- * avec délégation de l'affichage à la méthode paint d'une instance de Plot
- */
 public class PlotPanel extends JPanel {
 
     private Plot plot;
@@ -24,7 +20,11 @@ public class PlotPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        plot.paint((Graphics2D)g, this.getWidth(), this.getHeight());
+        try {
+            plot.paint((Graphics2D) g, this.getWidth(), this.getHeight());
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
-
 }
