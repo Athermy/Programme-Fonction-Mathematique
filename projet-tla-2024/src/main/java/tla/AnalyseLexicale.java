@@ -161,7 +161,8 @@ public class AnalyseLexicale {
         if (!parenthesesStack.isEmpty()) {
             throw new LexicalErrorException("Parenthèse ouvrante sans fermeture correspondante");
         }
-
+        
+        System.out.println("Tokens générés : " + tokens);
         return tokens;
     }
 

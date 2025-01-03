@@ -25,6 +25,8 @@ public class AnalyseSyntaxique {
             System.out.println("L'analyse syntaxique s'est terminé avant l'examen de tous les tokens");
             throw new IncompleteParsingException();
         }
+        System.out.println("AST généré : ");
+        Noeud.afficheNoeud(expr, 0);
         return expr;
     }
 
@@ -47,8 +49,11 @@ public class AnalyseSyntaxique {
             Noeud n = new Noeud(operator == TypeDeToken.ADD ? TypeDeNoeud.add : TypeDeNoeud.subtract);
             n.ajout(i); // Ajouter le noeud gauche
             n.ajout(A()); // Ajouter le noeud droit
-            return n;
+            System.out.println("Expr_prime : Analyse après ajout de " + operator);
+            return Expr_prime(n); // Continue l'analyse pour permettre plusieurs opérations en série
         }
+        System.out.println("Expr_prime : Token actuel après analyse = " + getTypeDeToken());
+
         return i;
     }
 
@@ -66,8 +71,10 @@ public class AnalyseSyntaxique {
             Noeud n = new Noeud(operator == TypeDeToken.MULTIPLY ? TypeDeNoeud.multiply : TypeDeNoeud.divide);
             n.ajout(i); // Ajouter le noeud gauche
             n.ajout(B()); // Ajouter le noeud droit
-            return n;
+            System.out.println("A_prime : Analyse après ajout de " + operator);
+            return A_prime(n);
         }
+        System.out.println("A_prime : Token actuel après analyse = " + getTypeDeToken());
         return i;
     }
 
@@ -170,6 +177,7 @@ public class AnalyseSyntaxique {
         if (pos >= tokens.size()) {
             return null;
         } else {
+            System.out.println("Type de token actuel : " + tokens.get(pos).getTypeDeToken());
             return tokens.get(pos).getTypeDeToken();
         }
     }
@@ -181,6 +189,7 @@ public class AnalyseSyntaxique {
         } else {
             Token t = tokens.get(pos);
             pos++;
+            System.out.println("Token consommé : " + t);
             return t;
         }
     }

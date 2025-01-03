@@ -81,7 +81,9 @@ public class Main {
                 Noeud ast = analyseSyntaxique.analyse(new AnalyseLexicale().analyse(userInput));
                 plot.setAst(ast); // Mettre à jour l'AST du graphique
                 widgetTrace.repaint(); // Redessiner le graphique
+                System.out.println("Analyse terminée avec succès !");
             } catch (Exception e) {
+                System.err.println("Erreur : " + e.getMessage());
                 JOptionPane.showMessageDialog(frame, "Erreur : " + e.getMessage(), "Erreur de saisie", JOptionPane.ERROR_MESSAGE);
             }
         };
