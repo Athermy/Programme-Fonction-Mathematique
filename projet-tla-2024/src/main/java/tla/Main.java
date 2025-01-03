@@ -1,8 +1,17 @@
+/*
+MAKLOUFI Mayassa
+CHEN Christophe
+CASTEL Arthur
+*/
+
 package tla;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
@@ -30,20 +39,21 @@ public class Main {
         SwingUtilities.invokeLater(main::init);
     }
 
+    // Initialisation de l'interface utilisateur
     public void init() {
         plot = new Plot();
 
-        // Main window
+        // Fenêtre principale
         JFrame frame = new JFrame("Projet TLA 2024");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
-        // Plot area
+        // Zone de tracé
         PlotPanel widgetTrace = new PlotPanel(plot);
         widgetTrace.setPreferredSize(new Dimension(PREF_WIDTH, PREF_HEIGHT));
         frame.add(widgetTrace, BorderLayout.CENTER);
 
-        // Control panel
+        // Panneau de contrôle
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
@@ -62,42 +72,57 @@ public class Main {
 
         frame.add(topPanel, BorderLayout.NORTH);
 
-        // Action listeners
-        btnOk.addActionListener(event -> {
+        // Action listeners pour le bouton Ok
+        ActionListener okActionListener = event -> {
             String userInput = inputField.getText();
             try {
-                plot.setFunction(userInput);
-                widgetTrace.repaint();
+                // Analyse lexicale et syntaxique de l'entrée utilisateur
+                AnalyseSyntaxique analyseSyntaxique = new AnalyseSyntaxique();
+                Noeud ast = analyseSyntaxique.analyse(new AnalyseLexicale().analyse(userInput));
+                plot.setAst(ast); // Mettre à jour l'AST du graphique
+                widgetTrace.repaint(); // Redessiner le graphique
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(frame, "Erreur : " + e.getMessage(), "Erreur de saisie", JOptionPane.ERROR_MESSAGE);
             }
+        };
+        btnOk.addActionListener(okActionListener);
+
+        // Ajouter un écouteur de clavier pour détecter la touche Entrée
+        inputField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    btnOk.doClick(); // Simuler un clic sur le bouton Ok
+                }
+            }
         });
 
+        // Ajouter un écouteur de changement pour le slider
         slider.addChangeListener(event -> {
             if (timer != null && timer.isRunning()) {
                 timer.restart();
             } else {
                 timer = new Timer(100, e -> {
-                    plot.setRange((double) (100 - slider.getValue()) / RANGE_ADJUST);
-                    widgetTrace.repaint();
+                    plot.setRange((double) (100 - slider.getValue()) / RANGE_ADJUST); // Mettre à jour la plage de valeurs
+                    widgetTrace.repaint(); // Redessiner le graphique
                 });
                 timer.setRepeats(false);
                 timer.start();
             }
         });
 
-        // Add mouse wheel listener for zooming
+        // Ajouter un gestionnaire de molette de souris pour le zoom
         widgetTrace.addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
                 int notches = e.getWheelRotation();
                 int newValue = slider.getValue() - notches;
                 newValue = Math.max(slider.getMinimum(), Math.min(slider.getMaximum(), newValue));
-                slider.setValue(newValue);
+                slider.setValue(newValue); // Mettre à jour la valeur du slider
             }
         });
 
-        // Show main window
+        // Afficher la fenêtre principale
         frame.pack();
         frame.setVisible(true);
     }

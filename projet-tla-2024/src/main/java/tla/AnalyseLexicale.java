@@ -1,3 +1,9 @@
+/*
+MAKLOUFI Mayassa
+CHEN Christophe
+CASTEL Arthur
+*/
+
 package tla;
 
 import java.util.ArrayList;
@@ -6,6 +12,7 @@ import java.util.Stack;
 
 public class AnalyseLexicale {
 
+    // Table de transition pour l'analyse lexicale
     private static final Integer[][] TRANSITIONS = {
         //            espace    +    *    /    -    ^    abs  sin  cos  tan  exp    (    )    ,  chiffre  lettre    x    .
         /*  0 */    {      0, 101, 102, 109, 110, 108, 111, 112, 113, 114, 115, 103, 104, 105,       1,      2,   116,  1  },
@@ -34,6 +41,7 @@ public class AnalyseLexicale {
 
     private static final int ETAT_INITIAL = 0;
 
+    // Analyse lexicale de l'entrée et retourne une liste de tokens correspondants
     public List<Token> analyse(String entree) throws Exception {
         this.entree = entree;
         pos = 0;
@@ -42,48 +50,49 @@ public class AnalyseLexicale {
         String buf = "";
         Integer etat = ETAT_INITIAL;
         Character c;
-        boolean lastWasOperator = true; // Track if the last token was an operator
-        Stack<Character> parenthesesStack = new Stack<>(); // Stack to track parentheses
+        boolean lastWasOperator = true; // Suivre si le dernier token était un opérateur ou non
+        Stack<Character> parenthesesStack = new Stack<>(); // Pile pour suivre les parenthèses ouvrantes non fermées et les parenthèses fermantes non ouvertes
 
         do {
-            c = lireCaractere();
-            Integer e = TRANSITIONS[etat][indiceSymbole(c)];
+            c = lireCaractere(); // Lire le prochain caractère de l'entrée
+            Integer e = TRANSITIONS[etat][indiceSymbole(c)]; // Obtenir le prochain état à partir de la table de transition
             if (e == null) {
                 throw new LexicalErrorException("pas de transition depuis état " + etat + " avec symbole " + c);
             }
-            if (e >= 100) {
+            if (e >= 100) { // Si l'état est un état d'acceptation
                 switch (e) {
                     case 101:
-                        tokens.add(new Token(TypeDeToken.ADD));
+                        tokens.add(new Token(TypeDeToken.ADD)); // Ajouter un token ADD
                         break;
                     case 102:
-                        tokens.add(new Token(TypeDeToken.MULTIPLY));
+                        tokens.add(new Token(TypeDeToken.MULTIPLY)); // Ajouter un token MULTIPLY
                         break;
                     case 103:
-                        tokens.add(new Token(TypeDeToken.LEFT_PAR));
-                        parenthesesStack.push('('); // Push to stack
+                        tokens.add(new Token(TypeDeToken.LEFT_PAR)); // Ajouter un token LEFT_PAR
+                        parenthesesStack.push('('); // Empiler la parenthèse ouvrante pour vérification ultérieure
                         break;
                     case 104:
-                        tokens.add(new Token(TypeDeToken.RIGHT_PAR));
+                        tokens.add(new Token(TypeDeToken.RIGHT_PAR)); // Ajouter un token RIGHT_PAR
                         if (parenthesesStack.isEmpty() || parenthesesStack.pop() != '(') {
                             throw new LexicalErrorException("Parenthèse fermante sans correspondance");
                         }
                         break;
                     case 105:
-                        tokens.add(new Token(TypeDeToken.COMMA));
+                        tokens.add(new Token(TypeDeToken.COMMA)); // Ajouter un token COMMA
                         break;
                     case 106:
-                        tokens.add(new Token(TypeDeToken.INTV, buf));
-                        retourArriere();
+                        tokens.add(new Token(TypeDeToken.INTV, buf)); // Ajouter un token INTV avec la valeur du buffer
+                        retourArriere(); // Revenir en arrière d'un caractère
                         break;
                     case 107:
                         switch (buf) {
-                            case "input":
-                                tokens.add(new Token(TypeDeToken.K_INPUT));
-                                break;
-                            case "print":
-                                tokens.add(new Token(TypeDeToken.K_PRINT));
-                                break;
+                            // Supprimez les cas pour 'input' et 'print'
+                            // case "input":
+                            //     tokens.add(new Token(TypeDeToken.K_INPUT));
+                            //     break;
+                            // case "print":
+                            //     tokens.add(new Token(TypeDeToken.K_PRINT));
+                            //     break;
                             case "pow":
                                 tokens.add(new Token(TypeDeToken.K_POW));
                                 break;
@@ -103,51 +112,52 @@ public class AnalyseLexicale {
                                 tokens.add(new Token(TypeDeToken.EXP));
                                 break;
                             default:
-                                tokens.add(new Token(TypeDeToken.IDENT, buf));
+                                tokens.add(new Token(TypeDeToken.IDENT, buf)); // Ajouter un token IDENT avec la valeur du buffer
                                 break;
                         }
-                        retourArriere();
+                        retourArriere(); // Revenir en arrière d'un caractère
                         break;
                     case 108:
-                        tokens.add(new Token(TypeDeToken.K_POW));
+                        tokens.add(new Token(TypeDeToken.K_POW)); // Ajouter un token K_POW
                         break;
                     case 109:
-                        tokens.add(new Token(TypeDeToken.DIVIDE));
+                        tokens.add(new Token(TypeDeToken.DIVIDE)); // Ajouter un token DIVIDE
                         break;
                     case 110:
                         if (lastWasOperator) {
-                            tokens.add(new Token(TypeDeToken.INTV, "0")); // Add 0 before negative number
+                            tokens.add(new Token(TypeDeToken.INTV, "0")); // Ajouter 0 avant un nombre négatif pour éviter les erreurs d'analyse syntaxique
                         }
-                        tokens.add(new Token(TypeDeToken.SUBTRACT));
+                        tokens.add(new Token(TypeDeToken.SUBTRACT)); // Ajouter un token SUBTRACT
                         break;
                     case 111:
-                        tokens.add(new Token(TypeDeToken.ABS));
+                        tokens.add(new Token(TypeDeToken.ABS)); // Ajouter un token ABS
                         break;
                     case 112:
-                        tokens.add(new Token(TypeDeToken.SIN));
+                        tokens.add(new Token(TypeDeToken.SIN)); // Ajouter un token SIN
                         break;
                     case 113:
-                        tokens.add(new Token(TypeDeToken.COS));
+                        tokens.add(new Token(TypeDeToken.COS)); // Ajouter un token COS
                         break;
                     case 114:
-                        tokens.add(new Token(TypeDeToken.TAN));
+                        tokens.add(new Token(TypeDeToken.TAN)); // Ajouter un token TAN
                         break;
                     case 115:
-                        tokens.add(new Token(TypeDeToken.EXP));
+                        tokens.add(new Token(TypeDeToken.EXP)); // Ajouter un token EXP
                         break;
                     case 116:
-                        tokens.add(new Token(TypeDeToken.IDENT, "x"));
+                        tokens.add(new Token(TypeDeToken.IDENT, "x")); // Ajouter un token IDENT avec la valeur "x"
                         break;
                 }
-                etat = 0;
-                buf = "";
-                lastWasOperator = (e != 106 && e != 107 && e != 116); // Update lastWasOperator
+                etat = 0; // Réinitialiser l'état
+                buf = ""; // Réinitialiser le buffer
+                lastWasOperator = (e != 106 && e != 107 && e != 116); // Mettre à jour lastWasOperator
             } else {
-                etat = e;
-                if (etat > 0) buf = buf + c;
+                etat = e; // Mettre à jour l'état
+                if (etat > 0) buf = buf + c; // Ajouter le caractère au buffer
             }
         } while (c != null);
 
+        // Vérifier s'il reste des parenthèses ouvrantes non fermées
         if (!parenthesesStack.isEmpty()) {
             throw new LexicalErrorException("Parenthèse ouvrante sans fermeture correspondante");
         }
@@ -155,21 +165,24 @@ public class AnalyseLexicale {
         return tokens;
     }
 
+    // Lire le prochain caractère de l'entrée
     private Character lireCaractere() {
         Character c;
         try {
-            c = entree.charAt(pos);
-            pos = pos + 1;
+            c = entree.charAt(pos); // Lire le caractère à la position actuelle
+            pos = pos + 1; // Avancer la position
         } catch (StringIndexOutOfBoundsException ex) {
-            c = null;
+            c = null; // Retourner null si la position dépasse la longueur de l'entrée
         }
         return c;
     }
 
+    // Revenir en arrière d'un caractère
     private void retourArriere() {
-        pos = pos - 1;
+        pos = pos - 1; // Reculer la position d'un caractère
     }
 
+    // Obtenir l'indice du symbole dans la table de transition
     public static int indiceSymbole(Character c) throws IllegalCharacterException {
         if (c == null) return 0;
         if (Character.isWhitespace(c)) return 0;

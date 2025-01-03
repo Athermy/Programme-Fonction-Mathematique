@@ -1,3 +1,9 @@
+/*
+MAKLOUFI Mayassa
+CHEN Christophe
+CASTEL Arthur
+*/
+
 package tla;
 
 import java.awt.Graphics;
@@ -15,10 +21,12 @@ public class PlotPanel extends JPanel {
     private double offsetY = 0;
     private int prevX;
     private int prevY;
-    private final double MAX_OFFSET = 10; // Maximum offset value
+    private final double MAX_OFFSET = 10; // Valeur maximale de décalage pour le zoom
 
+    // Constructeur pour initialiser le panneau de tracé avec un objet Plot donné
     public PlotPanel(Plot plot) {
         this.plot = plot;
+        // Ajouter un gestionnaire de clic de souris pour détecter les clics
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -26,6 +34,7 @@ public class PlotPanel extends JPanel {
                 prevY = e.getY();
             }
         });
+        // Ajouter un gestionnaire de mouvement pour détecter les glissements de souris
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
@@ -40,6 +49,7 @@ public class PlotPanel extends JPanel {
         });
     }
 
+    // Redéfinir la méthode paintComponent pour dessiner le graphique Plot
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
