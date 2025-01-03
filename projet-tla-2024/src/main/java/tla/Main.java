@@ -1,13 +1,17 @@
-/*
-MAKLOUFI Mayassa
-CHEN Christophe
-CASTEL Arthur
-*/
-
 package tla;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 public class Main {
 
@@ -23,7 +27,6 @@ public class Main {
     }
 
     public void init() {
-
         plot = new Plot();
 
         // Fenêtre principale

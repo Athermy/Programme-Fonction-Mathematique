@@ -1,0 +1,5 @@
+package tla;
+
+public enum TypeDeToken {
+    ADD, SUBTRACT, DIVIDE, MULTIPLY, LEFT_PAR, RIGHT_PAR, COMMA, INTV, IDENT, K_INPUT, K_PRINT, K_POW, ABS, SIN, COS, TAN, EXP, VAR_X
+}
