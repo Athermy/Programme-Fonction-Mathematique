@@ -2,6 +2,7 @@ package tla;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class AnalyseLexicale {
 
@@ -41,6 +42,8 @@ public class AnalyseLexicale {
         String buf = "";
         Integer etat = ETAT_INITIAL;
         Character c;
+        boolean lastWasOperator = true; // Track if the last token was an operator
+        Stack<Character> parenthesesStack = new Stack<>(); // Stack to track parentheses
 
         do {
             c = lireCaractere();
@@ -58,9 +61,13 @@ public class AnalyseLexicale {
                         break;
                     case 103:
                         tokens.add(new Token(TypeDeToken.LEFT_PAR));
+                        parenthesesStack.push('('); // Push to stack
                         break;
                     case 104:
                         tokens.add(new Token(TypeDeToken.RIGHT_PAR));
+                        if (parenthesesStack.isEmpty() || parenthesesStack.pop() != '(') {
+                            throw new LexicalErrorException("Parenthèse fermante sans correspondance");
+                        }
                         break;
                     case 105:
                         tokens.add(new Token(TypeDeToken.COMMA));
@@ -108,6 +115,9 @@ public class AnalyseLexicale {
                         tokens.add(new Token(TypeDeToken.DIVIDE));
                         break;
                     case 110:
+                        if (lastWasOperator) {
+                            tokens.add(new Token(TypeDeToken.INTV, "0")); // Add 0 before negative number
+                        }
                         tokens.add(new Token(TypeDeToken.SUBTRACT));
                         break;
                     case 111:
@@ -131,11 +141,16 @@ public class AnalyseLexicale {
                 }
                 etat = 0;
                 buf = "";
+                lastWasOperator = (e != 106 && e != 107 && e != 116); // Update lastWasOperator
             } else {
                 etat = e;
                 if (etat > 0) buf = buf + c;
             }
         } while (c != null);
+
+        if (!parenthesesStack.isEmpty()) {
+            throw new LexicalErrorException("Parenthèse ouvrante sans fermeture correspondante");
+        }
 
         return tokens;
     }

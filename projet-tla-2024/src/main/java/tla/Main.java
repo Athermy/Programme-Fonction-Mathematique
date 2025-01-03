@@ -3,6 +3,8 @@ package tla;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -12,10 +14,12 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 public class Main {
 
     Plot plot;
+    Timer timer;
 
     final static int PREF_HEIGHT = 300;
     final static int PREF_WIDTH = 400;
@@ -29,17 +33,17 @@ public class Main {
     public void init() {
         plot = new Plot();
 
-        // Fenêtre principale
+        // Main window
         JFrame frame = new JFrame("Projet TLA 2024");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
-        // Zone de tracé
+        // Plot area
         PlotPanel widgetTrace = new PlotPanel(plot);
         widgetTrace.setPreferredSize(new Dimension(PREF_WIDTH, PREF_HEIGHT));
         frame.add(widgetTrace, BorderLayout.CENTER);
 
-        // Panneau de contrôle
+        // Control panel
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
@@ -58,7 +62,7 @@ public class Main {
 
         frame.add(topPanel, BorderLayout.NORTH);
 
-        // Gestionnaires des différentes actions sur l'IHM
+        // Action listeners
         btnOk.addActionListener(event -> {
             String userInput = inputField.getText();
             try {
@@ -70,11 +74,30 @@ public class Main {
         });
 
         slider.addChangeListener(event -> {
-            plot.setRange((double) slider.getValue() / RANGE_ADJUST);
-            widgetTrace.repaint();
+            if (timer != null && timer.isRunning()) {
+                timer.restart();
+            } else {
+                timer = new Timer(100, e -> {
+                    plot.setRange((double) (100 - slider.getValue()) / RANGE_ADJUST);
+                    widgetTrace.repaint();
+                });
+                timer.setRepeats(false);
+                timer.start();
+            }
         });
 
-        // Rend visible la fenêtre principale
+        // Add mouse wheel listener for zooming
+        widgetTrace.addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                int notches = e.getWheelRotation();
+                int newValue = slider.getValue() - notches;
+                newValue = Math.max(slider.getMinimum(), Math.min(slider.getMaximum(), newValue));
+                slider.setValue(newValue);
+            }
+        });
+
+        // Show main window
         frame.pack();
         frame.setVisible(true);
     }
