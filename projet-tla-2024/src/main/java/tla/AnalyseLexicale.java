@@ -124,8 +124,9 @@ public class AnalyseLexicale {
                         tokens.add(new Token(TypeDeToken.DIVIDE)); // Ajouter un token DIVIDE
                         break;
                     case 110:
-                        if (lastWasOperator) {
-                            tokens.add(new Token(TypeDeToken.INTV, "0")); // Ajouter 0 avant un nombre négatif pour éviter les erreurs d'analyse syntaxique
+                        // Ajouter 0 avant un nombre négatif seulement si le dernier token n'était pas une parenthèse fermante
+                        if (lastWasOperator && (tokens.isEmpty() || tokens.get(tokens.size() - 1).getTypeDeToken() != TypeDeToken.RIGHT_PAR)) {
+                            tokens.add(new Token(TypeDeToken.INTV, "0"));
                         }
                         tokens.add(new Token(TypeDeToken.SUBTRACT)); // Ajouter un token SUBTRACT
                         break;
