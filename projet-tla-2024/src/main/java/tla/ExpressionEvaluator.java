@@ -142,6 +142,10 @@ public class ExpressionEvaluator {
             case exp:
                 return Math.exp(evaluerNoeud(noeud.enfant(0), x)); // Calculer l'exponentielle
             case subtract:
+                // Si le noeud droit est une soustraction, évaluer comme une addition
+                if (noeud.enfant(1).getTypeDeNoeud() == TypeDeNoeud.subtract) {
+                    return evaluerNoeud(noeud.enfant(0), x) + evaluerNoeud(noeud.enfant(1).enfant(1), x);
+                }
                 return evaluerNoeud(noeud.enfant(0), x) - evaluerNoeud(noeud.enfant(1), x); // Calculer la soustraction
             case divide:
                 return evaluerNoeud(noeud.enfant(0), x) / evaluerNoeud(noeud.enfant(1), x); // Calculer la division

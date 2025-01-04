@@ -78,15 +78,6 @@ public class Plot {
         g.drawLine((int) (centerX - offsetX * halfMinSize / range), 0, (int) (centerX - offsetX * halfMinSize / range), (int) h);
         g.drawLine(0, (int) (centerY + offsetY * halfMinSize / range), (int) w, (int) (centerY + offsetY * halfMinSize / range));
 
-        // Dessiner les valeurs des axes (ex. -5, -4, ..., 4, 5)
-        g.setColor(Color.BLACK);
-        for (int i = (int) -range; i <= range; i++) {
-            int x = (int) (centerX + (i - offsetX) * halfMinSize / range); // Position x de l'étiquette
-            int y = (int) (centerY - (i - offsetY) * halfMinSize / range); // Position y de l'étiquette
-            g.drawString(Integer.toString(i), x, (int) (centerY + offsetY * halfMinSize / range)); // Étiquette sur l'axe x
-            g.drawString(Integer.toString(i), (int) (centerX - offsetX * halfMinSize / range), y); // Étiquette sur l'axe y
-        }
-
         // Dessiner les points de la fonction 
         g.setColor(Color.BLACK);
         for (int i = 0; i < precomputedX.size(); i++) {

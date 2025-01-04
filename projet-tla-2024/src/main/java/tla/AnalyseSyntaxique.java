@@ -49,11 +49,8 @@ public class AnalyseSyntaxique {
             Noeud n = new Noeud(operator == TypeDeToken.ADD ? TypeDeNoeud.add : TypeDeNoeud.subtract);
             n.ajout(i); // Ajouter le noeud gauche
             n.ajout(A()); // Ajouter le noeud droit
-            System.out.println("Expr_prime : Analyse après ajout de " + operator);
             return Expr_prime(n); // Continue l'analyse pour permettre plusieurs opérations en série
         }
-        System.out.println("Expr_prime : Token actuel après analyse = " + getTypeDeToken());
-
         return i;
     }
 

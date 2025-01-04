@@ -124,11 +124,22 @@ public class AnalyseLexicale {
                         tokens.add(new Token(TypeDeToken.DIVIDE)); // Ajouter un token DIVIDE
                         break;
                     case 110:
-                        // Ajouter 0 avant un nombre négatif seulement si le dernier token n'était pas une parenthèse fermante
-                        if (lastWasOperator && (tokens.isEmpty() || tokens.get(tokens.size() - 1).getTypeDeToken() != TypeDeToken.RIGHT_PAR)) {
-                            tokens.add(new Token(TypeDeToken.INTV, "0"));
+                        // Vérifier si le prochain caractère est un espace suivi d'un autre '-'
+                        Character nextChar = lireCaractere();
+                        while (nextChar != null && Character.isWhitespace(nextChar)) {
+                            nextChar = lireCaractere();
                         }
-                        tokens.add(new Token(TypeDeToken.SUBTRACT)); // Ajouter un token SUBTRACT
+                        if (nextChar != null && nextChar == '-') {
+                            tokens.add(new Token(TypeDeToken.ADD)); // Ajouter un token ADD
+                            lastWasOperator = false;
+                        } else {
+                            retourArriere(); // Revenir en arrière d'un caractère
+                            // Ajouter 0 avant un nombre négatif seulement si le dernier token n'était pas une parenthèse fermante ou un opérateur
+                            if (lastWasOperator && (tokens.isEmpty() || tokens.get(tokens.size() - 1).getTypeDeToken() != TypeDeToken.RIGHT_PAR)) {
+                                tokens.add(new Token(TypeDeToken.INTV, "0"));
+                            }
+                            tokens.add(new Token(TypeDeToken.SUBTRACT)); // Ajouter un token SUBTRACT
+                        }
                         break;
                     case 111:
                         tokens.add(new Token(TypeDeToken.ABS)); // Ajouter un token ABS
@@ -163,7 +174,6 @@ public class AnalyseLexicale {
             throw new LexicalErrorException("Parenthèse ouvrante sans fermeture correspondante");
         }
         
-        System.out.println("Tokens générés : " + tokens);
         return tokens;
     }
 
