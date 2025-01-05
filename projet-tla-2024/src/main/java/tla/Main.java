@@ -89,7 +89,7 @@ public class Main {
         };
         btnOk.addActionListener(okActionListener);
 
-        // Ajouter un écouteur de clavier pour détecter la touche Entrée
+        // Action listeners pour détecter la touche Entrée
         inputField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -99,7 +99,7 @@ public class Main {
             }
         });
 
-        // Ajouter un écouteur de changement pour le slider
+        // Action listeners de changement pour le slider
         slider.addChangeListener(event -> {
             if (timer != null && timer.isRunning()) {
                 timer.restart();
@@ -113,7 +113,7 @@ public class Main {
             }
         });
 
-        // Ajouter un gestionnaire de molette de souris pour le zoom
+        // Action listeners de molette de souris pour le zoom
         widgetTrace.addMouseWheelListener(new MouseWheelListener() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {

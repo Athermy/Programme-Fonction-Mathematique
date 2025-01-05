@@ -86,16 +86,6 @@ public class AnalyseLexicale {
                         break;
                     case 107:
                         switch (buf) {
-                            // Supprimez les cas pour 'input' et 'print'
-                            // case "input":
-                            //     tokens.add(new Token(TypeDeToken.K_INPUT));
-                            //     break;
-                            // case "print":
-                            //     tokens.add(new Token(TypeDeToken.K_PRINT));
-                            //     break;
-                            case "pow":
-                                tokens.add(new Token(TypeDeToken.K_POW));
-                                break;
                             case "abs":
                                 tokens.add(new Token(TypeDeToken.ABS));
                                 break;
@@ -134,10 +124,6 @@ public class AnalyseLexicale {
                             lastWasOperator = false;
                         } else {
                             retourArriere(); // Revenir en arrière d'un caractère
-                            // Ajouter 0 avant un nombre négatif seulement si le dernier token n'était pas une parenthèse fermante ou un opérateur
-                            if (lastWasOperator && (tokens.isEmpty() || tokens.get(tokens.size() - 1).getTypeDeToken() != TypeDeToken.RIGHT_PAR)) {
-                                tokens.add(new Token(TypeDeToken.INTV, "0"));
-                            }
                             tokens.add(new Token(TypeDeToken.SUBTRACT)); // Ajouter un token SUBTRACT
                         }
                         break;

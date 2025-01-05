@@ -32,7 +32,7 @@ public class AnalyseSyntaxique {
 
     // Signaler une erreur avec un message
     private void signalerErreur(String message) throws Exception {
-        throw new Exception("Erreur à la position " + pos + ": " + message);
+        throw new Exception(" Position " + pos + ": " + message);
     }
 
     // Analyse une expression
@@ -95,7 +95,7 @@ public class AnalyseSyntaxique {
 
     // Analyse une valeur ou une expression entre parenthèses
     private Noeud C() throws Exception {
-        System.out.println("Analyzing token at position " + pos + ": " + getTypeDeToken());
+        System.out.println("Analyse du token à la position " + pos + ": " + getTypeDeToken());
         if (getTypeDeToken() == TypeDeToken.LEFT_PAR) {
             lireToken(); // Lire la parenthèse gauche
             Noeud s = Expr(); // Analyser l'expression entre parenthèses
@@ -136,7 +136,7 @@ public class AnalyseSyntaxique {
             n.ajout(C()); // Ajouter le noeud droit
             return n;
         }
-        signalerErreur("intv, ( ou ident attendu");
+        signalerErreur("[0-9], ( ou x attendu");
         return null; // Inaccessible, mais nécessaire pour la compilation
     }
 
@@ -160,7 +160,7 @@ public class AnalyseSyntaxique {
             case EXP:
                 return TypeDeNoeud.exp;
             default:
-                throw new IllegalArgumentException("Unknown function type: " + tokenType);
+                throw new IllegalArgumentException("Type de fonction inconnu: " + tokenType);
         }
     }
 

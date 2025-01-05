@@ -47,7 +47,7 @@ public class Plot {
     // Pré-calculer les valeurs de la fonction
     // Cette méthode calcule les valeurs de y pour une série de valeurs de x dans la plage spécifiée.
     // Les valeurs de x et y sont stockées dans les listes precomputedX et precomputedY respectivement.
-    // Cela permet de tracer le graphique plus efficacement en évitant de recalculer les valeurs à chaque fois que le graphique est redessiné.
+    // Cela permet de tracer le graphique plus efficacement en évitant de recalculer les valeurs à chaque fois que le graphique est redessiné (zoom et de-zoom).
     private void precomputeValues() {
         precomputedX.clear();
         precomputedY.clear();
@@ -59,10 +59,10 @@ public class Plot {
             try {
                 double y = evaluator.evaluate(ast, x); // Évaluer la fonction pour x
                 precomputedY.add(y); // Ajouter la valeur de y à la liste
-                System.out.println("Computed y for x = " + x + ": " + y); // Ligne de débogage
+                System.out.println("Calcul de y pour x = " + x + ": " + y); // Ligne de débogage
             } catch (Exception e) {
                 precomputedY.add(Double.NaN); // Ajouter NaN en cas d'erreur
-                System.err.println("Error computing y for x = " + x + ": " + e.getMessage()); // Ligne de débogage
+                System.err.println("Erreur de calcul de y pour x = " + x + ": " + e.getMessage()); // Ligne de débogage
             }
         }
     }

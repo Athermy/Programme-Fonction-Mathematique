@@ -26,7 +26,7 @@ public class PlotPanel extends JPanel {
     // Constructeur pour initialiser le panneau de tracé avec un objet Plot donné
     public PlotPanel(Plot plot) {
         this.plot = plot;
-        // Ajouter un gestionnaire de clic de souris pour détecter les clics
+        // Action Listener pour détecter les clics de souris
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -34,7 +34,7 @@ public class PlotPanel extends JPanel {
                 prevY = e.getY();
             }
         });
-        // Ajouter un gestionnaire de mouvement pour détecter les glissements de souris
+        // Action Listener pour détecter les glissements de souris
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {

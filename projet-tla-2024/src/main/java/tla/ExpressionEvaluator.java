@@ -28,95 +28,18 @@ public class ExpressionEvaluator {
         postfixExpression = tokensToPostfix(tokens);
     }
 
-    // Évalue l'expression avec une valeur donnée pour x
-    public double evaluate(double x) throws Exception {
-        if (postfixExpression == null) {
-            throw new Exception("Expression not parsed. Call parse() before evaluate.");
-        }
-        stack.clear();
-        for (String token : postfixExpression.split(" ")) {
-            System.out.println("Processing token: " + token); // Ligne de débogage
-            if (isNumeric(token)) {
-                stack.push(Double.parseDouble(token)); // Ajouter le nombre à la pile
-            } else if (token.equals("x")) {
-                stack.push(x); // Ajouter la valeur de x à la pile
-            } else {
-                if (token.equals("abs") || token.equals("sin") || token.equals("cos") || token.equals("tan") || token.equals("exp")) {
-                    if (stack.size() < 1) {
-                        throw new Exception("Invalid expression: not enough operands for operator " + token);
-                    }
-                    double a = stack.pop();
-                    switch (token) {
-                        case "abs":
-                            stack.push(Math.abs(a)); // Calculer la valeur absolue
-                            break;
-                        case "sin":
-                            stack.push(Math.sin(a)); // Calculer le sinus
-                            break;
-                        case "cos":
-                            stack.push(Math.cos(a)); // Calculer le cosinus
-                            break;
-                        case "tan":
-                            stack.push(Math.tan(a)); // Calculer la tangente
-                            break;
-                        case "exp":
-                            stack.push(Math.exp(a)); // Calculer l'exponentielle
-                            break;
-                        default:
-                            throw new Exception("Unknown operator: " + token);
-                    }
-                } else {
-                    if (stack.size() < 2) {
-                        throw new Exception("Invalid expression: not enough operands for operator " + token);
-                    }
-                    double b = stack.pop();
-                    double a = stack.pop();
-                    switch (token) {
-                        case "+":
-                        case "add": // Support pour "add"
-                            stack.push(a + b); // Calculer l'addition
-                            break;
-                        case "*":
-                        case "multiply": // Support pour "multiply"
-                            stack.push(a * b); // Calculer la multiplication
-                            break;
-                        case "/":
-                        case "divide": // Support pour "divide"
-                            stack.push(a / b); // Calculer la division
-                            break;
-                        case "-":
-                        case "subtract": // Support pour "subtract"
-                            stack.push(a - b); // Calculer la soustraction
-                            break;
-                        case "^":
-                        case "k_pow": // Support pour "k_pow"
-                            stack.push(Math.pow(a, b)); // Calculer la puissance
-                            break;
-                        default:
-                            throw new Exception("Unknown operator: " + token);
-                    }
-                }
-            }
-            System.out.println("Stack after processing token: " + stack); // Ligne de débogage
-        }
-        if (stack.size() != 1) {
-            throw new Exception("Invalid expression: stack size is not 1 after evaluation");
-        }
-        return stack.pop();
-    }
-
     // Évalue l'AST avec une valeur donnée pour x
     public double evaluate(Noeud ast, double x) throws Exception {
         if (ast == null) {
             throw new Exception("AST non défini. Appelez parse() avant evaluate.");
         }
-        System.out.println("Evaluating AST with x = " + x);
+        System.out.println("Evaluer AST avec x = " + x);
         return evaluerNoeud(ast, x);
     }
 
     // Évalue un noeud de l'AST
     private double evaluerNoeud(Noeud noeud, double x) throws Exception {
-        System.out.println("Evaluating node: " + noeud);
+        System.out.println("Evaluer noeud: " + noeud);
         switch (noeud.getTypeDeNoeud()) {
             case intv:
                 return Double.parseDouble(noeud.getValeur()); // Retourner la valeur entière
@@ -189,7 +112,7 @@ public class ExpressionEvaluator {
                     stack.pop(); // Supprimer la parenthèse gauche
                     break;
                 default:
-                    throw new IllegalArgumentException("Unknown token type: " + token.getTypeDeToken());
+                    throw new IllegalArgumentException("Type de token inconnu: " + token.getTypeDeToken());
             }
         }
         while (!stack.isEmpty()) {
