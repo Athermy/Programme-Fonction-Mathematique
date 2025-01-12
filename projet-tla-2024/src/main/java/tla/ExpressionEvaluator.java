@@ -33,13 +33,13 @@ public class ExpressionEvaluator {
         if (ast == null) {
             throw new Exception("AST non défini. Appelez parse() avant evaluate.");
         }
-        System.out.println("Evaluer AST avec x = " + x);
+        //System.out.println("Evaluer AST avec x = " + x);
         return evaluerNoeud(ast, x);
     }
 
     // Évalue un noeud de l'AST
     private double evaluerNoeud(Noeud noeud, double x) throws Exception {
-        System.out.println("Evaluer noeud: " + noeud);
+        //System.out.println("Evaluer noeud: " + noeud);
         switch (noeud.getTypeDeNoeud()) {
             case intv:
                 return Double.parseDouble(noeud.getValeur()); // Retourner la valeur entière

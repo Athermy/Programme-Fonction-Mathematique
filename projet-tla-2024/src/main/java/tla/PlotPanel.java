@@ -24,7 +24,7 @@ public class PlotPanel extends JPanel {
     public PlotPanel(Plot plot) {
         this.plot = plot;
     }
-    
+
     // Redéfinir la méthode paintComponent pour dessiner le graphique Plot
     @Override
     protected void paintComponent(Graphics g) {

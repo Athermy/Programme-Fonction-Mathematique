@@ -33,6 +33,7 @@ public class Main {
     final static int PREF_HEIGHT = 300;
     final static int PREF_WIDTH = 400;
     final static double RANGE_ADJUST = 10;
+    final static double MIN_RANGE = 0.1; // Plage minimale pour le zoom
 
     public static void main(String[] args) {
         Main main = new Main();
@@ -105,7 +106,11 @@ public class Main {
                 timer.restart();
             } else {
                 timer = new Timer(100, e -> {
-                    plot.setRange((double) (100 - slider.getValue()) / RANGE_ADJUST); // Mettre à jour la plage de valeurs
+                    double newRange = (double) (100 - slider.getValue()) / RANGE_ADJUST;
+                    if (newRange < MIN_RANGE) {
+                        newRange = MIN_RANGE; // Définir la plage minimale
+                    }
+                    plot.setRange(newRange); // Mettre à jour la plage de valeurs
                     widgetTrace.repaint(); // Redessiner le graphique
                 });
                 timer.setRepeats(false);
